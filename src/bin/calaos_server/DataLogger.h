@@ -22,8 +22,7 @@
 #define __DATA_LOGGER_H
 
 #include <IOBase.h>
-
-/* DISABLED, need to be rewritten once */
+#include "LightTSDB.h"
 
 namespace Calaos
 {
@@ -32,11 +31,8 @@ class DataLogger
 {
 private:
     DataLogger();
+    LightTSDB::LightTSDB m_LightTSDB;
 
-    void initEetDescriptors();
-    void releaseEetDescriptors();
-//    Eet_File *ef;
-//    Eina_Hash *hash_values;
 public:
     static DataLogger &Instance()
     {
@@ -46,6 +42,10 @@ public:
     ~DataLogger();
 
     void log(IOBase *io);
+    bool ReadValues(const std::string& sensor, time_t hour, std::list<LightTSDB::DataValue>& values);
+    bool ReadValues(const std::string& sensor, time_t hourBegin, time_t hourEnd, std::list<LightTSDB::DataValue>& values);
+    bool ReadLastValue(const std::string& sensor, LightTSDB::DataValue& value);
+    bool ResampleValues(const std::string& sensor, time_t timeBegin, time_t timeEnd, std::list<LightTSDB::DataValue>& values, int interval);
 };
 
 }

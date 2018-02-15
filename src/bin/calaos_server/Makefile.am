@@ -38,6 +38,7 @@ AM_CPPFLAGS =                                                 \
         -I$(top_srcdir)/src/lib/cJSON                         \
         -I$(top_srcdir)/src/lib/http-parser                   \
         -I$(top_srcdir)/src/lib/libquickmail                  \
+        -I$(top_srcdir)/src/lib/LightTSDB                     \
         -I$(top_srcdir)/src/lib/uri_parser                    \
         @CALAOS_COMMON_CFLAGS@                                \
         @CALAOS_SERVER_CFLAGS@                                \

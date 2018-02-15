@@ -15,6 +15,7 @@ AM_CXXFLAGS = \
         -I$(top_srcdir)/src/lib \
         -I$(top_srcdir)/src/lib/http-parser \
         -I$(top_srcdir)/src/lib/libquickmail \
+        -I$(top_srcdir)/src/lib/LightTSDB \
         -I$(top_srcdir)/src/lib/uri_parser \
         -I. \
         -I$(top_srcdir)/src/lib/uvw/src \
@@ -119,7 +120,10 @@ libcalaos_common_la_SOURCES = \
         json.hpp                                \
         uvw/src/uvw.hpp                         \
         FileUtils.h                             \
-        FileUtils.cpp
+        FileUtils.cpp                           \
+        LightTSDB/LightTSDB.h                   \
+        LightTSDB/LightTSDB.cpp
+
 
 libcalaos_common_la_LIBADD = -lm @CALAOS_COMMON_LIBS@
 
