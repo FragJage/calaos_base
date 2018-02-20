@@ -46,6 +46,16 @@ void DataLogger::log(IOBase *io)
     }
 }
 
+bool DataLogger::GetSensorList(list<string>& sensorList)
+{
+    return m_LightTSDB.GetSensorList(sensorList);
+}
+
+bool DataLogger::GetSensorInfo(const std::string& sensor, SensorInfo& sensorInfo)
+{
+    return m_LightTSDB.GetSensorInfo(sensor, sensorInfo);
+}
+
 bool DataLogger::ReadValues(const string& sensor, time_t hour, list<DataValue>& values)
 {
     return m_LightTSDB.ReadValues(sensor, hour, values);

@@ -42,6 +42,8 @@ public:
     ~DataLogger();
 
     void log(IOBase *io);
+    bool GetSensorList(std::list<std::string>& sensorList);
+    bool GetSensorInfo(const std::string& sensor, LightTSDB::SensorInfo& sensorInfo);
     bool ReadValues(const std::string& sensor, time_t hour, std::list<LightTSDB::DataValue>& values);
     bool ReadValues(const std::string& sensor, time_t hourBegin, time_t hourEnd, std::list<LightTSDB::DataValue>& values);
     bool ReadLastValue(const std::string& sensor, LightTSDB::DataValue& value);
