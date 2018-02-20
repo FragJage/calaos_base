@@ -80,6 +80,19 @@ bool LightTSDB::GetSensorList(list<string>& sensorList)
     return true;
 }
 
+bool LightTSDB::GetSensorInfo(const std::string& sensor, SensorInfo& sensorInfo)
+{
+    FilesInfo* filesInfo = getFilesInfo(sensor, FileDataType::Undefined);
+    if(filesInfo == nullptr) return false;
+
+    sensorInfo.maxDate = filesInfo->maxHour*3600;
+    sensorInfo.minDate = filesInfo->minHour*3600;
+    sensorInfo.options = filesInfo->options;
+    sensorInfo.type = filesInfo->type;
+    sensorInfo.version = filesInfo->version;
+    return true;
+}
+
 template<>
 bool LightTSDB::WriteValue<float>(const string& sensor, float value)
 {
@@ -220,7 +233,7 @@ bool LightTSDB::writeTimeValue(FilesInfo* filesInfo, void* pValue, time_t timest
     return true;
 }
 
-bool LightTSDB::ReadValues(const std::string& sensor, time_t hour, std::list<DataValue>& values)
+bool LightTSDB::ReadValues(const std::string& sensor, const time_t hour, std::list<DataValue>& values)
 {
     FilesInfo* filesInfo = getFilesInfo(sensor, FileDataType::Undefined);
     if(filesInfo == nullptr) return false;
@@ -248,7 +261,7 @@ bool LightTSDB::ReadValues(const std::string& sensor, time_t hour, std::list<Dat
     return true;
 }
 
-bool LightTSDB::ReadValues(const string& sensor, time_t timeBegin, time_t timeEnd, list<DataValue>& values)
+bool LightTSDB::ReadValues(const string& sensor, const time_t timeBegin, const time_t timeEnd, list<DataValue>& values)
 {
     FilesInfo* filesInfo = getFilesInfo(sensor, FileDataType::Undefined);
     if(filesInfo == nullptr) return false;
@@ -311,7 +324,7 @@ bool LightTSDB::ReadLastValue(const string& sensor, DataValue& dataValue)
     return true;
 }
 
-bool LightTSDB::ResampleValues(const string& sensor, time_t timeBegin, time_t timeEnd, list<DataValue>& values, int interval)
+bool LightTSDB::ResampleValues(const string& sensor, const time_t timeBegin, const time_t timeEnd, list<DataValue>& values, const int interval, int* nbValues)
 {
     list<DataValue> readValues;
     vector<ResamplingHelper::AverageValue> averages;
@@ -320,6 +333,7 @@ bool LightTSDB::ResampleValues(const string& sensor, time_t timeBegin, time_t ti
         return false;
 
     values.clear();
+    if(nbValues!=nullptr) *nbValues = readValues.size();
     if(readValues.size()==0) return true;
 
     ResamplingHelper::Average(timeBegin, readValues, interval, averages);

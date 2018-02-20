@@ -121,6 +121,8 @@ libcalaos_common_la_SOURCES = \
         uvw/src/uvw.hpp                         \
         FileUtils.h                             \
         FileUtils.cpp                           \
+        LightTSDB/TimeHelper.h                  \
+        LightTSDB/TimeHelper.cpp                \
         LightTSDB/LightTSDB.h                   \
         LightTSDB/LightTSDB.cpp
 

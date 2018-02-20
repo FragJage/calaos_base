@@ -99,6 +99,15 @@ struct DataValue
     UValue value;
 };
 
+struct SensorInfo
+{
+    time_t minDate;
+    time_t maxDate;
+    uint8_t version;
+    FileDataType type;
+    uint8_t options;
+};
+
 struct ErrorInfo
 {
     std::string Code;
@@ -161,6 +170,12 @@ class LightTSDB
         /// \return   True if sensors are found
         bool GetSensorList(std::list<std::string>& sensorList);
 
+        /// \brief    Details of a sensor
+        /// \details  Get details of the sensor.
+        /// \param    sensor       Name of sensor
+        /// \return   True if sensor is found
+        bool GetSensorInfo(const std::string& sensor, SensorInfo& sensorInfo);
+
         /// \brief    Write value into LightTSDB
         /// \details  Add a new value of a sensor into LightTSDB at current time.
         /// \param    sensor       Name of sensor
@@ -193,7 +208,7 @@ class LightTSDB
         /// \param    hour         Hour
         /// \param    values       List of time/value
         /// \return   True if values are found
-        bool ReadValues(const std::string& sensor, time_t hour, std::list<DataValue>& values);
+        bool ReadValues(const std::string& sensor, const time_t hour, std::list<DataValue>& values);
 
         /// \brief    Read values into LightTSDB
         /// \details  Read values of a sensor into LightTSDB between two times.
@@ -202,7 +217,7 @@ class LightTSDB
         /// \param    hourEnd      Ending hour
         /// \param    values       List of time/value
         /// \return   True if values are found
-        bool ReadValues(const std::string& sensor, time_t hourBegin, time_t hourEnd, std::list<DataValue>& values);
+        bool ReadValues(const std::string& sensor, const time_t hourBegin, const time_t hourEnd, std::list<DataValue>& values);
 
         /// \brief    Read last value into LightTSDB
         /// \details  Read last value of a sensor into LightTSDB.
@@ -212,14 +227,15 @@ class LightTSDB
         bool ReadLastValue(const std::string& sensor, DataValue& value);
 
         /// \brief    Read and resample values into LightTSDB
-        /// \details  Read and resample values of a sensor into LightTSDB between two times with a reguler interval.
+        /// \details  Read and resample values of a sensor into LightTSDB between two times with a regular interval.
         /// \param    sensor       Name of sensor
         /// \param    hourBegin    Beginning hour
         /// \param    hourEnd      Ending hour
         /// \param    interval     Interval in seconds
         /// \param    values       List of time/value
+        /// \param    nbValues     Number of values before resampling
         /// \return   True if values are found
-        bool ResampleValues(const std::string& sensor, time_t timeBegin, time_t timeEnd, std::list<DataValue>& values, int interval);
+        bool ResampleValues(const std::string& sensor, const time_t timeBegin, const time_t timeEnd, std::list<DataValue>& values, int interval, int* nbValues=nullptr);
 
         /// \brief    Close LightTSDB files
         /// \details  Close LightTSDB files (data and index) for a sensor.
