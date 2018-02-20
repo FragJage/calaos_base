@@ -76,9 +76,10 @@ private:
     void processSetTimerange(json_t *jroot);
     void processAutoscenario(json_t *jroot);
     void processCamera();
-
     void processAudio(json_t *jroot);
     void processAudioDb(json_t *jroot);
+    void processLoggedIOList();
+    void processLoggedIOValues();
 
     void getNextPlaylistItem(AudioPlayer *player, json_t *jplayer, json_t *jplaylist, int it_current, int it_count);
 

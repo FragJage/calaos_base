@@ -24,6 +24,7 @@
 #include "ListeRule.h"
 #include "AutoScenario.h"
 #include "CalaosConfig.h"
+#include "TimeHelper.h"
 
 JsonApi::JsonApi(HttpClient *client):
     httpClient(client)
@@ -1595,4 +1596,94 @@ json_t *JsonApi::buildAutoscenarioDelSchedule(json_t *jdata)
 
     Params p = {{ "success", "true" }};
     return p.toJson();
+}
+
+json_t *JsonApi::buildJsonLoggedIOList()
+{
+    list<string> sensorList;
+    list<string>::const_iterator itSensor, itEnd;
+    DataLogger::Instance().GetSensorList(sensorList);
+    json_t *jdata = json_array();
+
+    itSensor = sensorList.begin();
+    itEnd = sensorList.end();
+    while(itSensor != itEnd)
+    {
+        json_t *jsensor = json_object();
+        json_object_set_new(jsensor, "name", json_string((*itSensor).c_str()));
+        json_array_append_new(jdata, jsensor);
+        ++itSensor;
+    }
+
+    return jdata;
+}
+
+json_t *JsonApi::buildJsonLoggedIOValues(const Params &jParam)
+{
+    string id = jParam["id"];
+    LightTSDB::SensorInfo sensorInfo;
+    LightTSDB::DataValue value;
+    list<LightTSDB::DataValue> values;
+    list<LightTSDB::DataValue>::const_iterator itValue, itEnd;
+    int nbValue = -1;
+
+
+    if (!jParam.Exists("begin"))
+    {
+        DataLogger::Instance().ReadLastValue(id, value);
+        values.push_back(value);
+    }
+    else if (!jParam.Exists("end"))
+    {
+        DataLogger::Instance().ReadValues(id, TimeHelper::ToTime(jParam["begin"]), values);
+    }
+    else if (!jParam.Exists("interval"))
+    {
+        DataLogger::Instance().ReadValues(id, TimeHelper::ToTime(jParam["begin"]), TimeHelper::ToTime(jParam["end"]), values);
+    }
+    else
+    {
+        int interval = atoi(jParam["interval"].c_str());
+        DataLogger::Instance().ResampleValues(id, TimeHelper::ToTime(jParam["begin"]), TimeHelper::ToTime(jParam["end"]), values, interval, &nbValue);
+    }
+
+    DataLogger::Instance().GetSensorInfo(id, sensorInfo);
+
+    json_t *jdata = json_object();
+    json_t *jarray = json_array();
+
+    switch(sensorInfo.type)
+    {
+        case LightTSDB::FileDataType::Float :
+            json_object_set_new(jdata, "type", json_string("Float"));
+            break;
+        case LightTSDB::FileDataType::Int :
+            json_object_set_new(jdata, "type", json_string("Int"));
+            break;
+        case LightTSDB::FileDataType::Double :
+            json_object_set_new(jdata, "type", json_string("Double"));
+            break;
+        case LightTSDB::FileDataType::Bool :
+            json_object_set_new(jdata, "type", json_string("Bool"));
+            break;
+        default :
+            json_object_set_new(jdata, "type", json_string("Undefined"));
+            break;
+    }
+
+    if(nbValue>0) json_object_set_new(jdata, "nbValues", json_integer(nbValue));
+
+    itValue = values.begin();
+    itEnd = values.end();
+    while(itValue != itEnd)
+    {
+        json_t *jvalue = json_object();
+        json_object_set_new(jvalue, "date", json_string(TimeHelper::ToString(itValue->time).c_str()));
+        json_object_set_new(jvalue, "value", json_string((itValue->value.Float).c_str()));
+        json_array_append_new(jarray, jvalue);
+        ++itSensor;
+    }
+    json_object_set_new(jdata, "data", jarray);
+
+    return jdata;
 }

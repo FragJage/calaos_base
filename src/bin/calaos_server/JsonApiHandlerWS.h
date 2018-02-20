@@ -57,11 +57,11 @@ private:
     void processGetIO(json_t *jdata, const string &client_id = string());
     void processGetTimerange(const Params &jsonReq, const string &client_id = string());
     void processSetTimerange(json_t *jdata, const string &client_id = string());
-
     void processAudio(json_t *jdata, const string &client_id = string());
     void processAudioDb(json_t *jdata, const string &client_id = string());
-
     void processAutoscenario(json_t *jdata, const string &client_id = string());
+    void processLoggedIOList(const string &client_id = string());
+    void processLoggedIOValues(const Params &jsonReq, const string &client_id = string());
 };
 
 #endif // JSONAPIV3_H

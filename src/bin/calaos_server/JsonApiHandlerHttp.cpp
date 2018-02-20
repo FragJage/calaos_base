@@ -145,6 +145,10 @@ void JsonApiHandlerHttp::processApi(const string &data, const Params &paramsGET)
         processGetTimerange();
     else if (jsonParam["action"] == "camera")
         processCamera();
+    else if (jsonParam["action"] == "logged_io_list")
+        processLoggedIOList();
+    else if (jsonParam["action"] == "logged_io_values")
+        processLoggedIOValues();
     else
     {
         if (!jroot)
@@ -830,4 +834,14 @@ void JsonApiHandlerHttp::downloadCameraPicture(IPCam *camera)
         });
     });
     cameraDl->httpGet();
+}
+
+void JsonApiHandlerHttp::processLoggedIOList()
+{
+    sendJson(buildJsonLoggedIOList());
+}
+
+void JsonApiHandlerHttp::processLoggedIOValues()
+{
+    sendJson(buildJsonLoggedIOValues(jsonParam));
 }

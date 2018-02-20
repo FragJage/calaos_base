@@ -170,6 +170,10 @@ void JsonApiHandlerWS::processApi(const string &data, const Params &paramsGET)
             processSetTimerange(jdata, jsonRoot["msg_id"]);
         else if (jsonRoot["msg"] == "autoscenario")
             processAutoscenario(jdata, jsonRoot["msg_id"]);
+        else if (jsonRoot["msg"] == "logged_io_list")
+            processLoggedIOList(jsonRoot["msg_id"]);
+        else if (jsonRoot["msg"] == "logged_io_values")
+            processLoggedIOValues(jsonData, jsonRoot["msg_id"]);
 
 //        else if (jsonParam["action"] == "get_cover")
 //            processGetCover();
@@ -439,4 +443,14 @@ void JsonApiHandlerWS::processAutoscenario(json_t *jdata, const string &client_i
         sendJson("autoscenario", buildAutoscenarioAddSchedule(jdata), client_id);
     else if (msg == "del_schedule")
         sendJson("autoscenario", buildAutoscenarioDelSchedule(jdata), client_id);
+}
+
+void JsonApiHandlerWS::processLoggedIOList(const string &client_id)
+{
+    sendJson("logged_io_list", buildJsonLoggedIOList(), client_id);
+}
+
+void JsonApiHandlerWS::processLoggedIOValues(const Params &jsonReq, const string &client_id)
+{
+    sendJson("logged_io_values", buildJsonLoggedIOValues(jsonReq), client_id);
 }
