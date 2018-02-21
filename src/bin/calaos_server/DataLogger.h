@@ -47,7 +47,7 @@ public:
     bool ReadValues(const std::string& sensor, time_t hour, std::list<LightTSDB::DataValue>& values);
     bool ReadValues(const std::string& sensor, time_t hourBegin, time_t hourEnd, std::list<LightTSDB::DataValue>& values);
     bool ReadLastValue(const std::string& sensor, LightTSDB::DataValue& value);
-    bool ResampleValues(const std::string& sensor, time_t timeBegin, time_t timeEnd, std::list<LightTSDB::DataValue>& values, int interval);
+    bool ResampleValues(const std::string& sensor, time_t timeBegin, time_t timeEnd, std::list<LightTSDB::DataValue>& values, int interval, int* nbValues);
 };
 
 }

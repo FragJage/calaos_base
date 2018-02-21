@@ -71,8 +71,8 @@ bool DataLogger::ReadLastValue(const string& sensor, DataValue& value)
     return m_LightTSDB.ReadLastValue(sensor, value);
 }
 
-bool DataLogger::ResampleValues(const string& sensor, time_t timeBegin, time_t timeEnd, list<DataValue>& values, int interval)
+bool DataLogger::ResampleValues(const string& sensor, time_t timeBegin, time_t timeEnd, list<DataValue>& values, int interval, int* nbValues)
 {
-    return m_LightTSDB.ResampleValues(sensor, timeBegin, timeEnd, values, interval);
+    return m_LightTSDB.ResampleValues(sensor, timeBegin, timeEnd, values, interval, nbValues);
 }
 

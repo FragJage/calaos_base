@@ -24,6 +24,7 @@
 #include "ListeRule.h"
 #include "AutoScenario.h"
 #include "CalaosConfig.h"
+#include "DataLogger.h"
 #include "TimeHelper.h"
 
 JsonApi::JsonApi(HttpClient *client):
@@ -1679,9 +1680,9 @@ json_t *JsonApi::buildJsonLoggedIOValues(const Params &jParam)
     {
         json_t *jvalue = json_object();
         json_object_set_new(jvalue, "date", json_string(TimeHelper::ToString(itValue->time).c_str()));
-        json_object_set_new(jvalue, "value", json_string((itValue->value.Float).c_str()));
+        json_object_set_new(jvalue, "value", json_real(itValue->value.Float));
         json_array_append_new(jarray, jvalue);
-        ++itSensor;
+        ++itValue;
     }
     json_object_set_new(jdata, "data", jarray);
 
